@@ -1,5 +1,5 @@
 <template>
   <div>
-    <h1>Form</h1>
+    <h1>Formulário</h1>
   </div>
 </template>
