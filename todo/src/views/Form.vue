@@ -44,6 +44,15 @@ export default {
         description: '',
       }
     }
+  },
+
+  methods: {
+    saveTask() {
+      let tasks = (localStorage.getItem('tasks')) ? JSON.parse(localStorage.getItem('tasks')) : [];
+      tasks.push(this.form);
+      localStorage.setItem('tasks', tasks);
+      this.$router.push({ name: 'list'});
+    }
   }
 
 }
