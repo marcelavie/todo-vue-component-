@@ -1,23 +1,23 @@
 <template>
-  <div class='container mt-2'>
-    <b-card-text>descrição</b-card-text>
+  <div class="container mt-2">
     <div v-for="(task, index) in tasks" :key="index">
-    <b-card :title="task.subject" class="'mb-2'">
-      <b-card-text>{{ task.description }}</b-card-text>
-    
-      <b-button variant="outline-secondary" class="mr-2" @click="edit(index)">Editar</b-button>
-      <b-button variant="outline-danger" class="mr-2" @click="remove(task, index)" >Excluir</b-button>
-    </b-card>
+      <b-card :title="task.subject" class="mb-2">
+          <b-card-text>{{ task.description }}</b-card-text>
+        
+          <b-button variant="outline-secondary" class="mr-2" @click="edit(index)">Editar</b-button>
+          <b-button variant="outline-danger" class="mr-2" @click="remove(task, index)">Excluir</b-button>
+      </b-card>
   </div> 
 
-  <b-modal ref="modalRemove" hide title="Excluir Tarefa">
-  <div class="d-block text-center">Você tem certeza que quer excluir essa tarefa? {{ taskSelected.subject }}</div>
-  <div class="mt-3 d-flex justify-content-center-end">
-    <b-button variant="outline-secondary" class="mr-2" @click="hideModal">Cancelar</b-button>
-    <b-button variant="outline-danger" class="mr-2" @click="confirmRemoveTask" >Excluir</b-button>
-
-  </div>
-</b-modal>
+  <b-modal ref="modalRemove" hide-footer title="Excluir Tarefa">
+    <div class="d-block text-center">
+      Você tem certeza que quer excluir essa tarefa? {{ taskSelected.subject }}
+    </div>
+    <div class="mt-3 d-flex justify-content-end">
+      <b-button variant="outline-secondary" class="mr-2" @click="hideModal"> Cancelar </b-button>
+      <b-button variant="outline-danger" class="mr-2" @click="confirmRemoveTask"> Excluir </b-button>
+    </div>
+  </b-modal>
 </div>
 
 </template>
@@ -28,20 +28,21 @@ export default {
 
   data() {
     return {
-      tasks: []
-      }
+      tasks: [],
+      taskSelected: [],
+    }
   },
   
   created() {
-      this.tasks = (localStorage.getItem('tasks')) ? JSON.parse(localStorage.getItem('tasks')) : [];
+    this.tasks = (localStorage.getItem('tasks')) ? JSON.parse(localStorage.getItem('tasks')) : [];
   },
 
   methods: {
     edit(index) {
       this.$router.push({ name: 'form', params: { index } });
     },
-    remove(tasks, index) {
-      this.taskSelected = tasks;
+    remove(task, index) {
+      this.taskSelected = task;
       this.taskSelected.index = index;
       this.$refs.modalRemove.show();
 
@@ -51,7 +52,9 @@ export default {
       this.$refs.modalRemove.hide();
     },
     confirmRemoveTask() {
-
+      this.tasks.splice(this.taskSelected.index, 1);
+      localStorage.setItem("tasks", JSON.stringify(this.tasks));
+      this.hideModal();
     }
   }
 
